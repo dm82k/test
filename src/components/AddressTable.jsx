@@ -24,6 +24,7 @@ const AddressTable = ({
       className: 'status-not-interested',
     },
     { value: 'Venta', label: 'Venta', className: 'status-sale' },
+    { value: 'Ausente', label: 'Ausente', className: 'status-absent' },
   ];
 
   const interestLevels = ['', 'Alto', 'Medio', 'Bajo', 'Ninguno'];
