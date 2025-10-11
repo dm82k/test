@@ -26,11 +26,13 @@ A React web application that helps sales professionals collect addresses from Op
 - **Real-time Updates**: Table updates instantly as you type or change filters
 - **Clear Filters**: Reset all filters with one click
 
-### 💾 Data Persistence
+### 🗄️ Cloud Database Storage
 
-- **Auto-Save**: All changes automatically saved to browser storage
-- **Persistent Data**: Your work survives browser refreshes and restarts
-- **Data Management**: Clear all data option when starting fresh
+- **Supabase Integration**: Reliable PostgreSQL cloud database
+- **Real-time Sync**: Data syncs across devices automatically
+- **Smart Storage**: Only saves modified addresses to optimize performance
+- **Backup & Recovery**: Your data is safe in the cloud
+- **Pagination**: Handle thousands of addresses efficiently (100 per page)
 
 ## Getting Started
 
@@ -38,22 +40,58 @@ A React web application that helps sales professionals collect addresses from Op
 
 - Node.js (version 16 or higher)
 - npm or yarn package manager
+- Supabase account (free tier available)
 
 ### Installation
 
-1. **Install dependencies**
+1. **Clone the repository**
+
+   ```bash
+   git clone <repository-url>
+   cd address-collector
+   ```
+
+2. **Install dependencies**
 
    ```bash
    npm install
    ```
 
-2. **Start the development server**
+3. **Set up Supabase Database**
+
+   #### Create Supabase Project
+
+   - Go to [supabase.com](https://supabase.com)
+   - Sign up and create a new project
+   - Wait for database initialization (~2 minutes)
+
+   #### Run Database Schema
+
+   - In your Supabase dashboard, go to "SQL Editor"
+   - Copy the contents of `database-schema.sql` from this project
+   - Paste and run the SQL to create the addresses table
+
+   #### Get API Credentials
+
+   - Go to Settings → API in your Supabase dashboard
+   - Copy your `Project URL` and `anon public key`
+
+4. **Configure Environment Variables**
+
+   Create a `.env.local` file in the project root:
+
+   ```env
+   VITE_SUPABASE_URL=https://your-project-id.supabase.co
+   VITE_SUPABASE_ANON_KEY=your-anon-key-here
+   ```
+
+5. **Start the development server**
 
    ```bash
    npm run dev
    ```
 
-3. **Open your browser**
+6. **Open your browser**
    Navigate to `http://localhost:3000`
 
 ## How to Use
@@ -176,6 +214,37 @@ src/
 - Try smaller bounding boxes
 - Check internet connection
 - OpenStreetMap servers may be busy
+
+## Deployment
+
+### Netlify Deployment
+
+1. **Build Settings**
+
+   - Base directory: `.` (root)
+   - Build command: `npm run build`
+   - Publish directory: `dist`
+
+2. **Environment Variables**
+
+   In your Netlify dashboard, go to Site Settings → Environment Variables and add:
+
+   ```
+   VITE_SUPABASE_URL = https://your-project-id.supabase.co
+   VITE_SUPABASE_ANON_KEY = your-anon-key-here
+   ```
+
+3. **Deploy**
+   - Connect your GitHub repository to Netlify
+   - Netlify will automatically build and deploy your app
+   - Your app will be available at `https://your-site-name.netlify.app`
+
+### Database Management
+
+- **Supabase Dashboard**: Monitor your database usage and performance
+- **Automatic Backups**: Supabase handles backups automatically
+- **Scaling**: Free tier includes 500MB database storage
+- **Real-time**: Changes sync across all connected devices instantly
 
 ## License
 

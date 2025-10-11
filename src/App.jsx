@@ -4,10 +4,7 @@ import AddressTable from './components/AddressTable';
 import AddressFilter from './components/AddressFilter';
 import Pagination from './components/Pagination';
 import { fetchAddresses } from './services/addressService';
-import {
-  saveToLocalStorage,
-  loadFromLocalStorage,
-} from './services/storageService';
+import { databaseService } from './services/databaseService';
 
 function App() {
   const [addresses, setAddresses] = useState([]);
@@ -20,10 +17,13 @@ function App() {
   // Note: We no longer auto-load on mount since we generate fresh addresses
   // and merge with saved modifications during search
 
-  // Save to localStorage whenever addresses change
+  // Save to database whenever addresses change
   useEffect(() => {
     if (addresses.length > 0) {
-      saveToLocalStorage(addresses);
+      databaseService.saveAddresses(addresses).catch((error) => {
+        console.error('Failed to save to database:', error);
+        // Could show a toast notification here
+      });
     }
   }, [addresses]);
 
@@ -35,11 +35,10 @@ function App() {
     try {
       const results = await fetchAddresses(searchParams);
 
-      // Merge with any existing modifications from localStorage
-      const savedModifications = loadFromLocalStorage();
-      const mergedResults = mergeWithSavedModifications(
+      // Merge with saved data from database
+      const mergedResults = await databaseService.loadAndMergeAddresses(
         results,
-        savedModifications
+        searchParams.city
       );
 
       setAddresses(mergedResults);
@@ -53,54 +52,14 @@ function App() {
     }
   };
 
-  // Merge newly generated addresses with saved modifications
-  const mergeWithSavedModifications = (newAddresses, savedModifications) => {
-    if (!savedModifications || savedModifications.length === 0) {
-      return newAddresses;
-    }
-
-    // Create a map of saved modifications by address key
-    const modificationsMap = new Map();
-    savedModifications.forEach((addr) => {
-      const key = `${addr.house_number}-${addr.street}`;
-      modificationsMap.set(key, addr);
-    });
-
-    // Apply modifications to matching addresses
-    const mergedAddresses = newAddresses.map((addr) => {
-      const key = `${addr.house_number}-${addr.street}`;
-      const savedModification = modificationsMap.get(key);
-
-      if (savedModification) {
-        // Merge the saved modifications with the new address
-        return {
-          ...addr,
-          visited: savedModification.visited,
-          visit_date: savedModification.visit_date,
-          interest_level: savedModification.interest_level,
-          contact_info: savedModification.contact_info,
-          notes: savedModification.notes,
-          follow_up_date: savedModification.follow_up_date,
-          status: savedModification.status,
-        };
-      }
-
-      return addr;
-    });
-
-    console.log(
-      `Merged ${savedModifications.length} saved modifications with ${newAddresses.length} new addresses`
-    );
-    return mergedAddresses;
-  };
-
-  const updateAddress = (index, field, value) => {
+  const updateAddress = async (index, field, value) => {
     const updatedAddresses = [...addresses];
     const addressToUpdate = filteredAddresses[index];
     const originalIndex = addresses.findIndex(
       (addr) =>
         addr.full_address === addressToUpdate.full_address &&
-        addr.latitude === addressToUpdate.latitude
+        addr.house_number === addressToUpdate.house_number &&
+        addr.street === addressToUpdate.street
     );
 
     if (originalIndex !== -1) {
@@ -117,6 +76,14 @@ function App() {
         [field]: value,
       };
       setFilteredAddresses(updatedFiltered);
+
+      // Save individual address update to database
+      try {
+        await databaseService.updateAddress(updatedAddresses[originalIndex]);
+      } catch (error) {
+        console.error('Failed to update address in database:', error);
+        // Could show a toast notification here
+      }
     }
   };
 
@@ -170,15 +137,21 @@ function App() {
       ?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const clearAllData = () => {
+  const clearAllData = async () => {
     if (
       window.confirm(
         '¿Estás seguro de que quieres borrar todos los datos guardados? Esta acción no se puede deshacer.'
       )
     ) {
-      localStorage.removeItem('addressCollectorData');
-      setAddresses([]);
-      setFilteredAddresses([]);
+      try {
+        await databaseService.clearAllData();
+        setAddresses([]);
+        setFilteredAddresses([]);
+        console.log('All data cleared from database');
+      } catch (error) {
+        console.error('Failed to clear data:', error);
+        alert('Error al borrar los datos. Por favor, inténtalo de nuevo.');
+      }
     }
   };
 
