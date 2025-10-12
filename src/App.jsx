@@ -4,12 +4,14 @@ import AddressTable from './components/AddressTable';
 import AddressFilter from './components/AddressFilter';
 import Pagination from './components/Pagination';
 import LoginForm from './components/LoginForm';
+import StatisticsModal from './components/StatisticsModal';
 import { fetchAddresses } from './services/addressService';
 import { databaseService } from './services/databaseService';
 import { authService } from './services/authService';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showStatistics, setShowStatistics] = useState(false);
   const [addresses, setAddresses] = useState([]);
   const [filteredAddresses, setFilteredAddresses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -167,6 +169,15 @@ function App() {
     setIsAuthenticated(false);
     setAddresses([]);
     setFilteredAddresses([]);
+    setShowStatistics(false);
+  };
+
+  const handleShowStatistics = () => {
+    setShowStatistics(true);
+  };
+
+  const handleCloseStatistics = () => {
+    setShowStatistics(false);
   };
 
   const clearAllData = async () => {
@@ -201,6 +212,9 @@ function App() {
           ventas
         </p>
         <div className="header-buttons">
+          <button onClick={handleShowStatistics} className="stats-button">
+            📊 Ver Estadísticas
+          </button>
           {addresses.length > 0 && (
             <button onClick={clearAllData} className="clear-data-button">
               🗑️ Borrar Todos los Datos
@@ -226,6 +240,7 @@ function App() {
         </div>
       )}
 
+      {/* Address Table */}
       {addresses.length > 0 && (
         <>
           <AddressFilter addresses={addresses} onFilter={handleFilter} />
@@ -244,6 +259,12 @@ function App() {
           />
         </>
       )}
+
+      {/* Statistics Modal */}
+      <StatisticsModal
+        isOpen={showStatistics}
+        onClose={handleCloseStatistics}
+      />
     </div>
   );
 }

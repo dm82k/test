@@ -794,3 +794,533 @@ body {
     margin: 0 auto;
   }
 }
+/* Tab Navigation Styles */
+.tab-navigation {
+  display: flex;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.tab-button {
+  flex: 1;
+  background: #f8f9fa;
+  border: none;
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #6c757d;
+  border-right: 1px solid #e9ecef;
+}
+
+.tab-button:last-child {
+  border-right: none;
+}
+
+.tab-button:hover {
+  background: #e9ecef;
+  color: #495057;
+}
+
+.tab-button.active {
+  background: #3498db;
+  color: white;
+}
+
+.tab-icon {
+  font-size: 18px;
+}
+
+.tab-label {
+  font-weight: 600;
+}
+
+.tab-count {
+  background: rgba(255,255,255,0.2);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.tab-button.active .tab-count {
+  background: rgba(255,255,255,0.3);
+}
+
+/* Statistics Styles */
+.statistics-container {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  padding: 25px;
+}
+
+.stats-header {
+  margin-bottom: 25px;
+}
+
+.stats-header h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.date-filter {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.date-inputs {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.date-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.date-group label {
+  font-weight: 600;
+  color: #495057;
+  font-size: 14px;
+}
+
+.date-input {
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.clear-date-button {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.clear-date-button:hover {
+  background: #5a6268;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.stat-card h3 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.stat-item:last-child {
+  border-bottom: none;
+}
+
+.stat-label {
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-weight: 600;
+  font-size: 16px;
+  color: #2c3e50;
+}
+
+.stat-value.success {
+  color: #28a745;
+}
+
+.stat-value.warning {
+  color: #ffc107;
+}
+
+.stat-percentage {
+  color: #6c757d;
+  font-size: 14px;
+  margin-left: 8px;
+}
+
+.stat-detail {
+  color: #6c757d;
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #28a745, #20c997);
+  transition: width 0.3s ease;
+}
+
+/* Special card styles */
+.overview-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.overview-card h3,
+.overview-card .stat-label,
+.overview-card .stat-value,
+.overview-card .stat-percentage {
+  color: white;
+}
+
+.overview-card .stat-item {
+  border-bottom-color: rgba(255,255,255,0.2);
+}
+
+.period-card {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+}
+
+.period-card h3,
+.period-card .stat-label,
+.period-card .stat-value {
+  color: white;
+}
+
+.period-card .stat-item {
+  border-bottom-color: rgba(255,255,255,0.2);
+}
+
+.conversion-card {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+}
+
+.conversion-card h3,
+.conversion-card .stat-label,
+.conversion-card .stat-value,
+.conversion-card .stat-detail {
+  color: white;
+}
+
+.conversion-card .stat-item {
+  border-bottom-color: rgba(255,255,255,0.2);
+}
+
+/* iPad optimizations for statistics */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .statistics-container {
+    padding: 20px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+  }
+  
+  .stat-card {
+    padding: 15px;
+  }
+  
+  .date-inputs {
+    gap: 10px;
+  }
+  
+  .tab-button {
+    padding: 12px 15px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 767px) {
+  .statistics-container {
+    padding: 15px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .date-inputs {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  
+  .date-group {
+    justify-content: space-between;
+  }
+  
+  .tab-button {
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px;
+  }
+  
+  .tab-label {
+    font-size: 12px;
+  }
+}
+/* Statistics loading and error states */
+.statistics-container .loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6c757d;
+  font-size: 18px;
+}
+
+.statistics-container .error {
+  text-align: center;
+  padding: 40px 20px;
+  color: #dc3545;
+  font-size: 16px;
+}
+
+.retry-button {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s;
+}
+
+.retry-button:hover {
+  background: #c82333;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6c757d;
+}
+
+.empty-state p {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #868e96;
+}
+
+.stats-summary {
+  color: #6c757d;
+  font-size: 14px;
+  margin-top: 5px;
+  font-style: italic;
+}
+/* Statistics Button */
+.stats-button {
+  background: #17a2b8;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.stats-button:hover {
+  background: #138496;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 95vw;
+  max-height: 95vh;
+  width: 1200px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  border-bottom: 1px solid #e9ecef;
+  background: #f8f9fa;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 24px;
+}
+
+.modal-close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 5px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.modal-close-button:hover {
+  background: #e9ecef;
+  color: #495057;
+}
+
+.modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.modal-body .statistics-container {
+  box-shadow: none;
+  border-radius: 0;
+  margin: 0;
+}
+
+/* iPad optimizations for modal */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .modal-content {
+    width: 90vw;
+    max-height: 90vh;
+  }
+  
+  .modal-header {
+    padding: 15px 20px;
+  }
+  
+  .modal-header h2 {
+    font-size: 20px;
+  }
+  
+  .stats-button {
+    padding: 10px 18px;
+    font-size: 15px;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 767px) {
+  .modal-overlay {
+    padding: 10px;
+  }
+  
+  .modal-content {
+    width: 100%;
+    max-height: 90vh;
+  }
+  
+  .modal-header {
+    padding: 15px;
+  }
+  
+  .modal-header h2 {
+    font-size: 18px;
+  }
+  
+  .modal-close-button {
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+  }
+  
+  .stats-button {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}
+
+/* Animation for modal */
+.modal-overlay {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
