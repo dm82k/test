@@ -57,7 +57,8 @@ const AddressTable = ({
         <table className="addresses-table">
           <thead>
             <tr>
-              <th>Dirección</th>
+              <th>Número</th>
+              <th>Calle</th>
               <th>Ciudad</th>
               <th>Provincia</th>
               <th>Visitado</th>
@@ -73,20 +74,9 @@ const AddressTable = ({
             {addresses.map((address, index) => (
               <tr key={index}>
                 <td>
-                  <strong>{address.full_address}</strong>
-                  {address.latitude && address.longitude && (
-                    <div
-                      style={{
-                        fontSize: '12px',
-                        color: '#666',
-                        marginTop: '4px',
-                      }}
-                    >
-                      📍 {address.latitude.toFixed(4)},{' '}
-                      {address.longitude.toFixed(4)}
-                    </div>
-                  )}
+                  <strong>{address.house_number}</strong>
                 </td>
+                <td>{address.street}</td>
                 <td>{address.city || '-'}</td>
                 <td>{address.province || '-'}</td>
                 <td>

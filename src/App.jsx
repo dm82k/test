@@ -103,11 +103,23 @@ function App() {
       const searchLower = filters.search.toLowerCase();
       filtered = filtered.filter(
         (addr) =>
-          addr.full_address.toLowerCase().includes(searchLower) ||
+          addr.street.toLowerCase().includes(searchLower) ||
           addr.city.toLowerCase().includes(searchLower) ||
-          addr.postcode.toLowerCase().includes(searchLower) ||
           (addr.notes && addr.notes.toLowerCase().includes(searchLower))
       );
+    }
+
+    // Number range filter
+    if (filters.numberFrom || filters.numberTo) {
+      filtered = filtered.filter((addr) => {
+        const houseNum = parseInt(addr.house_number);
+        if (isNaN(houseNum)) return false;
+
+        const fromNum = filters.numberFrom ? parseInt(filters.numberFrom) : 0;
+        const toNum = filters.numberTo ? parseInt(filters.numberTo) : Infinity;
+
+        return houseNum >= fromNum && houseNum <= toNum;
+      });
     }
 
     // Status filter

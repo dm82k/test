@@ -308,7 +308,7 @@ body {
 
 .filter-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr;
   gap: 20px;
 }
 
@@ -482,62 +482,69 @@ body {
   }
   
   /* Optimize column widths for iPad */
-  .addresses-table th:nth-child(1), /* Dirección */
+  .addresses-table th:nth-child(1), /* Número */
   .addresses-table td:nth-child(1) {
+    min-width: 60px;
+    max-width: 80px;
+    text-align: center;
+  }
+  
+  .addresses-table th:nth-child(2), /* Calle */
+  .addresses-table td:nth-child(2) {
     min-width: 140px;
     max-width: 180px;
   }
   
-  .addresses-table th:nth-child(2), /* Ciudad */
-  .addresses-table td:nth-child(2) {
+  .addresses-table th:nth-child(3), /* Ciudad */
+  .addresses-table td:nth-child(3) {
     min-width: 80px;
     max-width: 100px;
   }
   
-  .addresses-table th:nth-child(3), /* Provincia */
-  .addresses-table td:nth-child(3) {
+  .addresses-table th:nth-child(4), /* Provincia */
+  .addresses-table td:nth-child(4) {
     min-width: 70px;
     max-width: 90px;
   }
   
-  .addresses-table th:nth-child(4), /* Visitado */
-  .addresses-table td:nth-child(4) {
+  .addresses-table th:nth-child(5), /* Visitado */
+  .addresses-table td:nth-child(5) {
     min-width: 70px;
     max-width: 80px;
   }
   
-  .addresses-table th:nth-child(5), /* Fecha de Visita */
-  .addresses-table td:nth-child(5) {
+  .addresses-table th:nth-child(6), /* Fecha de Visita */
+  .addresses-table td:nth-child(6) {
     min-width: 120px;
     max-width: 140px;
   }
   
-  .addresses-table th:nth-child(6), /* Estado */
-  .addresses-table td:nth-child(6) {
+  .addresses-table th:nth-child(7), /* Estado */
+  .addresses-table td:nth-child(7) {
     min-width: 110px;
     max-width: 130px;
   }
   
-  .addresses-table th:nth-child(7), /* Nivel de Interés */
-  .addresses-table td:nth-child(7) {
+  .addresses-table th:nth-child(8), /* Nivel de Interés */
+  .addresses-table td:nth-child(8) {
     min-width: 90px;
     max-width: 110px;
   }
   
-  .addresses-table th:nth-child(8), /* Info de Contacto */
-  .addresses-table td:nth-child(8) {
+  .addresses-table th:nth-child(9), /* Info de Contacto */
+  .addresses-table td:nth-child(9) {
     min-width: 100px;
     max-width: 120px;
   }
   
-  .addresses-table th:nth-child(9), /* Notas */
-  .addresses-table td:nth-child(9) {
+  .addresses-table th:nth-child(10), /* Notas */
+  .addresses-table td:nth-child(10) {
     min-width: 150px;
     max-width: 200px;
   }
   
-  .addresses-table th:nth-child(10), /* Seguimiento */
-  .addresses-table td:nth-child(10) {
+  .addresses-table th:nth-child(11), /* Seguimiento */
+  .addresses-table td:nth-child(11) {
     min-width: 120px;
     max-width: 140px;
   }
@@ -738,5 +745,52 @@ body {
   
   .header-buttons {
     justify-content: center;
+  }
+}
+/* Number range filter styles */
+.number-range {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.number-input {
+  flex: 1;
+  min-width: 60px;
+}
+
+.range-separator {
+  color: #7f8c8d;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* iPad optimizations for number filters */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .filter-grid {
+    grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr;
+    gap: 15px;
+  }
+  
+  .number-range {
+    gap: 6px;
+  }
+  
+  .number-input {
+    min-width: 50px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 767px) {
+  .filter-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .number-range {
+    justify-content: center;
+    max-width: 200px;
+    margin: 0 auto;
   }
 }
