@@ -3,16 +3,24 @@ import SearchForm from './components/SearchForm';
 import AddressTable from './components/AddressTable';
 import AddressFilter from './components/AddressFilter';
 import Pagination from './components/Pagination';
+import LoginForm from './components/LoginForm';
 import { fetchAddresses } from './services/addressService';
 import { databaseService } from './services/databaseService';
+import { authService } from './services/authService';
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [addresses, setAddresses] = useState([]);
   const [filteredAddresses, setFilteredAddresses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(100); // Show 100 addresses per page
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Check authentication on app load
+  useEffect(() => {
+    setIsAuthenticated(authService.checkSession());
+  }, []);
 
   // Note: We no longer auto-load on mount since we generate fresh addresses
   // and merge with saved modifications during search
@@ -137,6 +145,18 @@ function App() {
       ?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleLogin = () => {
+    authService.login();
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    authService.logout();
+    setIsAuthenticated(false);
+    setAddresses([]);
+    setFilteredAddresses([]);
+  };
+
   const clearAllData = async () => {
     if (
       window.confirm(
@@ -155,6 +175,11 @@ function App() {
     }
   };
 
+  // Show login form if not authenticated
+  if (!isAuthenticated) {
+    return <LoginForm onLogin={handleLogin} />;
+  }
+
   return (
     <div className="container">
       <div className="header">
@@ -163,11 +188,16 @@ function App() {
           Encuentra direcciones en tu área objetivo y rastrea tus visitas de
           ventas
         </p>
-        {addresses.length > 0 && (
-          <button onClick={clearAllData} className="clear-data-button">
-            🗑️ Borrar Todos los Datos
+        <div className="header-buttons">
+          {addresses.length > 0 && (
+            <button onClick={clearAllData} className="clear-data-button">
+              🗑️ Borrar Todos los Datos
+            </button>
+          )}
+          <button onClick={handleLogout} className="logout-button">
+            🚪 Cerrar Sesión
           </button>
-        )}
+        </div>
       </div>
 
       <SearchForm onSearch={handleSearch} loading={loading} />
