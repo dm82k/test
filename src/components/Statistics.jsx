@@ -42,108 +42,222 @@ const Statistics = () => {
 
   // Filter addresses by date range
   useEffect(() => {
-    let filtered = allAddresses;
+    try {
+      let filtered = allAddresses;
 
-    if (dateFilter.startDate || dateFilter.endDate) {
-      filtered = addresses.filter((addr) => {
-        if (!addr.visit_date) return false;
+      if (dateFilter.startDate || dateFilter.endDate) {
+        filtered = allAddresses.filter((addr) => {
+          if (!addr.visit_date) return false;
 
-        const visitDate = new Date(addr.visit_date);
-        const startDate = dateFilter.startDate
-          ? new Date(dateFilter.startDate)
-          : null;
-        const endDate = dateFilter.endDate
-          ? new Date(dateFilter.endDate)
-          : null;
+          const visitDate = new Date(addr.visit_date);
+          const startDate = dateFilter.startDate
+            ? new Date(dateFilter.startDate)
+            : null;
+          const endDate = dateFilter.endDate
+            ? new Date(dateFilter.endDate)
+            : null;
 
-        if (startDate && visitDate < startDate) return false;
-        if (endDate && visitDate > endDate) return false;
+          if (startDate && visitDate < startDate) return false;
+          if (endDate && visitDate > endDate) return false;
 
-        return true;
-      });
+          return true;
+        });
+      }
+
+      setFilteredAddresses(filtered);
+    } catch (error) {
+      console.error('Error filtering addresses by date:', error);
+      setFilteredAddresses(allAddresses);
     }
-
-    setFilteredAddresses(filtered);
   }, [allAddresses, dateFilter]);
 
   // Calculate statistics from all database addresses
-  const stats = {
-    total: allAddresses.length,
-    visited: allAddresses.filter((addr) => addr.visited === 'Sí').length,
-    notVisited: allAddresses.filter((addr) => addr.visited === 'No').length,
+  const stats = React.useMemo(() => {
+    try {
+      if (!allAddresses || allAddresses.length === 0) {
+        return {
+          total: 0,
+          visited: 0,
+          notVisited: 0,
+          sinContactar: 0,
+          contactado: 0,
+          interesado: 0,
+          noInteresado: 0,
+          venta: 0,
+          altoInteres: 0,
+          medioInteres: 0,
+          bajoInteres: 0,
+          ningunInteres: 0,
+          withNotes: 0,
+          withContact: 0,
+          withFollowUp: 0,
+        };
+      }
 
-    // Status breakdown
-    sinContactar: allAddresses.filter((addr) => addr.status === 'Sin Contactar')
-      .length,
-    contactado: allAddresses.filter((addr) => addr.status === 'Contactado')
-      .length,
-    interesado: allAddresses.filter((addr) => addr.status === 'Interesado')
-      .length,
-    noInteresado: allAddresses.filter((addr) => addr.status === 'No Interesado')
-      .length,
-    venta: allAddresses.filter((addr) => addr.status === 'Venta').length,
+      return {
+        total: allAddresses.length,
+        visited: allAddresses.filter((addr) => addr.visited === 'Sí').length,
+        notVisited: allAddresses.filter((addr) => addr.visited === 'No').length,
 
-    // Interest levels
-    altoInteres: allAddresses.filter((addr) => addr.interest_level === 'Alto')
-      .length,
-    medioInteres: allAddresses.filter((addr) => addr.interest_level === 'Medio')
-      .length,
-    bajoInteres: allAddresses.filter((addr) => addr.interest_level === 'Bajo')
-      .length,
-    ningunInteres: allAddresses.filter(
-      (addr) => addr.interest_level === 'Ninguno'
-    ).length,
+        // Status breakdown
+        sinContactar: allAddresses.filter(
+          (addr) => addr.status === 'Sin Contactar'
+        ).length,
+        contactado: allAddresses.filter((addr) => addr.status === 'Contactado')
+          .length,
+        interesado: allAddresses.filter((addr) => addr.status === 'Interesado')
+          .length,
+        noInteresado: allAddresses.filter(
+          (addr) => addr.status === 'No Interesado'
+        ).length,
+        venta: allAddresses.filter((addr) => addr.status === 'Venta').length,
 
-    // Notes and contacts
-    withNotes: allAddresses.filter((addr) => addr.notes && addr.notes.trim())
-      .length,
-    withContact: allAddresses.filter(
-      (addr) => addr.contact_info && addr.contact_info.trim()
-    ).length,
-    withFollowUp: allAddresses.filter((addr) => addr.follow_up_date).length,
-  };
+        // Interest levels
+        altoInteres: allAddresses.filter(
+          (addr) => addr.interest_level === 'Alto'
+        ).length,
+        medioInteres: allAddresses.filter(
+          (addr) => addr.interest_level === 'Medio'
+        ).length,
+        bajoInteres: allAddresses.filter(
+          (addr) => addr.interest_level === 'Bajo'
+        ).length,
+        ningunInteres: allAddresses.filter(
+          (addr) => addr.interest_level === 'Ninguno'
+        ).length,
+
+        // Notes and contacts
+        withNotes: allAddresses.filter(
+          (addr) => addr.notes && addr.notes.trim()
+        ).length,
+        withContact: allAddresses.filter(
+          (addr) => addr.contact_info && addr.contact_info.trim()
+        ).length,
+        withFollowUp: allAddresses.filter((addr) => addr.follow_up_date).length,
+      };
+    } catch (error) {
+      console.error('Error calculating statistics:', error);
+      return {
+        total: 0,
+        visited: 0,
+        notVisited: 0,
+        sinContactar: 0,
+        contactado: 0,
+        interesado: 0,
+        noInteresado: 0,
+        venta: 0,
+        altoInteres: 0,
+        medioInteres: 0,
+        bajoInteres: 0,
+        ningunInteres: 0,
+        withNotes: 0,
+        withContact: 0,
+        withFollowUp: 0,
+      };
+    }
+  }, [allAddresses]);
 
   // Time-filtered statistics
-  const timeStats = {
-    visitsInPeriod: filteredAddresses.filter((addr) => addr.visit_date).length,
-    interesadoInPeriod: filteredAddresses.filter(
-      (addr) => addr.status === 'Interesado'
-    ).length,
-    ventasInPeriod: filteredAddresses.filter((addr) => addr.status === 'Venta')
-      .length,
-    contactosInPeriod: filteredAddresses.filter(
-      (addr) => addr.contact_info && addr.contact_info.trim()
-    ).length,
-  };
+  const timeStats = React.useMemo(() => {
+    try {
+      if (!filteredAddresses || filteredAddresses.length === 0) {
+        return {
+          visitsInPeriod: 0,
+          interesadoInPeriod: 0,
+          ventasInPeriod: 0,
+          contactosInPeriod: 0,
+        };
+      }
+
+      return {
+        visitsInPeriod: filteredAddresses.filter((addr) => addr.visit_date)
+          .length,
+        interesadoInPeriod: filteredAddresses.filter(
+          (addr) => addr.status === 'Interesado'
+        ).length,
+        ventasInPeriod: filteredAddresses.filter(
+          (addr) => addr.status === 'Venta'
+        ).length,
+        contactosInPeriod: filteredAddresses.filter(
+          (addr) => addr.contact_info && addr.contact_info.trim()
+        ).length,
+      };
+    } catch (error) {
+      console.error('Error calculating time statistics:', error);
+      return {
+        visitsInPeriod: 0,
+        interesadoInPeriod: 0,
+        ventasInPeriod: 0,
+        contactosInPeriod: 0,
+      };
+    }
+  }, [filteredAddresses]);
 
   // Calculate conversion rates
-  const conversionRate =
-    stats.visited > 0
-      ? ((stats.interesado / stats.visited) * 100).toFixed(1)
-      : 0;
-  const salesRate =
-    stats.visited > 0 ? ((stats.venta / stats.visited) * 100).toFixed(1) : 0;
-  const contactRate =
-    stats.visited > 0
-      ? ((stats.withContact / stats.visited) * 100).toFixed(1)
-      : 0;
+  const conversionRate = React.useMemo(() => {
+    try {
+      return stats.visited > 0
+        ? ((stats.interesado / stats.visited) * 100).toFixed(1)
+        : 0;
+    } catch (error) {
+      console.error('Error calculating conversion rate:', error);
+      return 0;
+    }
+  }, [stats.visited, stats.interesado]);
+
+  const salesRate = React.useMemo(() => {
+    try {
+      return stats.visited > 0
+        ? ((stats.venta / stats.visited) * 100).toFixed(1)
+        : 0;
+    } catch (error) {
+      console.error('Error calculating sales rate:', error);
+      return 0;
+    }
+  }, [stats.visited, stats.venta]);
+
+  const contactRate = React.useMemo(() => {
+    try {
+      return stats.visited > 0
+        ? ((stats.withContact / stats.visited) * 100).toFixed(1)
+        : 0;
+    } catch (error) {
+      console.error('Error calculating contact rate:', error);
+      return 0;
+    }
+  }, [stats.visited, stats.withContact]);
 
   const handleDateChange = (field, value) => {
-    setDateFilter((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    try {
+      console.log('Date change:', field, value);
+      setDateFilter((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    } catch (error) {
+      console.error('Error handling date change:', error);
+    }
   };
 
   const clearDateFilter = () => {
-    setDateFilter({
-      startDate: '',
-      endDate: '',
-    });
+    try {
+      setDateFilter({
+        startDate: '',
+        endDate: '',
+      });
+    } catch (error) {
+      console.error('Error clearing date filter:', error);
+    }
   };
 
   const getProgressPercentage = (value, total) => {
-    return total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+    try {
+      if (!value || !total || total === 0) return 0;
+      return ((value / total) * 100).toFixed(1);
+    } catch (error) {
+      console.error('Error calculating progress percentage:', error);
+      return 0;
+    }
   };
 
   // Show loading state
