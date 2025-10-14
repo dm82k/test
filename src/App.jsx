@@ -12,6 +12,7 @@ import { offlineService } from './services/offlineService';
 import { useToast } from './hooks/useToast';
 import { ToastContainer } from './components/Toast';
 import UpdateNotification from './components/UpdateNotification';
+import InstallButton from './components/InstallButton';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -70,6 +71,37 @@ function App() {
       });
     }
   }, [addresses, showSuccess, showOffline, showError]);
+
+  // PWA Install Prompt Handler
+  useEffect(() => {
+    let deferredPrompt;
+
+    const handleBeforeInstallPrompt = (e) => {
+      console.log('PWA install prompt available');
+      e.preventDefault();
+      deferredPrompt = e;
+
+      // Show a custom install button or notification
+      showSuccess('¡Puedes instalar esta app en tu dispositivo!', 5000);
+    };
+
+    const handleAppInstalled = () => {
+      console.log('PWA was installed');
+      showSuccess('¡App instalada correctamente!', 3000);
+      deferredPrompt = null;
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    return () => {
+      window.removeEventListener(
+        'beforeinstallprompt',
+        handleBeforeInstallPrompt
+      );
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
+  }, [showSuccess]);
 
   const handleSearch = async (searchParams) => {
     setLoading(true);
@@ -305,6 +337,9 @@ function App() {
 
       {/* Update Notification */}
       <UpdateNotification />
+
+      {/* Install Button */}
+      <InstallButton />
     </div>
   );
 }

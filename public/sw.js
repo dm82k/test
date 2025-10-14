@@ -1,9 +1,10 @@
-const CACHE_NAME = 'sales-tracker-v4'; // Increment version for updates
+const CACHE_NAME = 'sales-tracker-v7'; // Increment version for updates
 const urlsToCache = [
   '/',
-  '/static/js/bundle.js',
-  '/static/css/main.css',
   '/manifest.json',
+  '/src/main.jsx',
+  '/src/App.jsx',
+  '/src/index.css',
 ];
 
 // Install event
@@ -42,13 +43,29 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch event
+// Fetch event - Network first, then cache
 self.addEventListener('fetch', (event) => {
+  // Skip cross-origin requests
+  if (!event.request.url.startsWith(self.location.origin)) {
+    return;
+  }
+
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      // Return cached version or fetch from network
-      return response || fetch(event.request);
-    })
+    fetch(event.request)
+      .then((response) => {
+        // If we got a response, clone it and store it in cache
+        if (response.status === 200) {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseClone);
+          });
+        }
+        return response;
+      })
+      .catch(() => {
+        // If network fails, try to get from cache
+        return caches.match(event.request);
+      })
   );
 });
 
