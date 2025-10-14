@@ -1163,6 +1163,19 @@ body {
   font-size: 14px;
   margin-top: 5px;
   font-style: italic;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-version {
+  background: #e9ecef;
+  color: #495057;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  font-style: normal;
 }
 /* Statistics Button */
 .stats-button {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { addressService } from '../services/supabaseClient';
 import SyncStatus from './SyncStatus';
+import packageJson from '../../package.json';
 
 const Statistics = () => {
   const [dateFilter, setDateFilter] = useState({
@@ -306,6 +307,7 @@ const Statistics = () => {
           <span>
             Datos de {allAddresses.length} direcciones en la base de datos
           </span>
+          <span className="app-version">v{packageJson.version}</span>
         </div>
 
         {/* Sync Status */}
