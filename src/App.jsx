@@ -8,6 +8,9 @@ import StatisticsModal from './components/StatisticsModal';
 import { fetchAddresses } from './services/addressService';
 import { databaseService } from './services/databaseService';
 import { authService } from './services/authService';
+import { offlineService } from './services/offlineService';
+import { useToast } from './hooks/useToast';
+import { ToastContainer } from './components/Toast';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -19,23 +22,53 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Toast notifications
+  const {
+    toasts,
+    removeToast,
+    showSuccess,
+    showError,
+    showWarning,
+    showSync,
+    showOffline,
+  } = useToast();
+
   // Check authentication on app load
   useEffect(() => {
     setIsAuthenticated(authService.checkSession());
   }, []);
 
+  // Set up offline/online listeners
+  useEffect(() => {
+    offlineService.setupNetworkListeners(
+      () => {
+        showSync('Conexión restaurada - sincronizando datos...', 2000);
+      },
+      () => {
+        showOffline('Sin conexión - los datos se guardarán localmente', 3000);
+      }
+    );
+  }, [showSync, showOffline]);
+
   // Note: We no longer auto-load on mount since we generate fresh addresses
   // and merge with saved modifications during search
 
-  // Save to database whenever addresses change
+  // Save to database/offline whenever addresses change
   useEffect(() => {
     if (addresses.length > 0) {
-      databaseService.saveAddresses(addresses).catch((error) => {
-        console.error('Failed to save to database:', error);
-        // Could show a toast notification here
+      offlineService.saveOffline(addresses).then((result) => {
+        if (result.success) {
+          if (result.synced) {
+            showSuccess(result.message, 2000);
+          } else {
+            showOffline(result.message, 3000);
+          }
+        } else {
+          showError(result.message, 4000);
+        }
       });
     }
-  }, [addresses]);
+  }, [addresses, showSuccess, showOffline, showError]);
 
   const handleSearch = async (searchParams) => {
     setLoading(true);
@@ -265,6 +298,9 @@ function App() {
         isOpen={showStatistics}
         onClose={handleCloseStatistics}
       />
+
+      {/* Toast Notifications */}
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { addressService } from '../services/supabaseClient';
+import SyncStatus from './SyncStatus';
 
 const Statistics = () => {
   const [dateFilter, setDateFilter] = useState({
@@ -306,6 +307,14 @@ const Statistics = () => {
             Datos de {allAddresses.length} direcciones en la base de datos
           </span>
         </div>
+
+        {/* Sync Status */}
+        <SyncStatus
+          onSync={(result) => {
+            console.log('Sync result:', result);
+            // The sync feedback will be handled by the toast system in App.jsx
+          }}
+        />
 
         {/* Date Filter */}
         <div className="date-filter">
