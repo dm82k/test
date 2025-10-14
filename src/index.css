@@ -5,7 +5,8 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    sans-serif;
   background-color: #f5f5f5;
   color: #333;
   line-height: 1.6;
@@ -43,7 +44,7 @@ body {
   background: white;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
 
@@ -66,7 +67,8 @@ body {
   color: #2c3e50;
 }
 
-.form-group input, .form-group select {
+.form-group input,
+.form-group select {
   width: 100%;
   padding: 12px;
   border: 2px solid #e1e8ed;
@@ -75,7 +77,8 @@ body {
   transition: border-color 0.3s;
 }
 
-.form-group input:focus, .form-group select:focus {
+.form-group input:focus,
+.form-group select:focus {
   outline: none;
   border-color: #3498db;
 }
@@ -131,7 +134,7 @@ body {
 .results-section {
   background: white;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
@@ -185,7 +188,7 @@ body {
     padding: 10px 6px;
     font-size: 13px;
   }
-  
+
   .addresses-table td {
     padding: 8px 6px;
     font-size: 13px;
@@ -210,11 +213,21 @@ body {
   }
 }
 
-.status-not-contacted { background: #f8f9fa; }
-.status-contacted { background: #fff3cd; }
-.status-interested { background: #d4edda; }
-.status-not-interested { background: #f8d7da; }
-.status-sale { background: #d1ecf1; }
+.status-not-contacted {
+  background: #f8f9fa;
+}
+.status-contacted {
+  background: #fff3cd;
+}
+.status-interested {
+  background: #d4edda;
+}
+.status-not-interested {
+  background: #f8d7da;
+}
+.status-sale {
+  background: #d1ecf1;
+}
 
 .notes-input {
   width: 100%;
@@ -239,15 +252,15 @@ body {
   .form-row {
     grid-template-columns: 1fr;
   }
-  
+
   .bbox-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .container {
     padding: 10px;
   }
-  
+
   .search-form {
     padding: 20px;
   }
@@ -271,7 +284,7 @@ body {
   background: white;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
 
@@ -320,7 +333,8 @@ body {
   font-size: 14px;
 }
 
-.filter-input, .filter-select {
+.filter-input,
+.filter-select {
   padding: 8px 12px;
   border: 2px solid #e1e8ed;
   border-radius: 6px;
@@ -328,7 +342,8 @@ body {
   transition: border-color 0.3s;
 }
 
-.filter-input:focus, .filter-select:focus {
+.filter-input:focus,
+.filter-select:focus {
   outline: none;
   border-color: #3498db;
 }
@@ -343,7 +358,7 @@ body {
     grid-template-columns: 1fr;
     gap: 15px;
   }
-  
+
   .filter-header {
     flex-direction: column;
     align-items: flex-start;
@@ -355,7 +370,7 @@ body {
   background: white;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
   display: flex;
   justify-content: space-between;
@@ -435,20 +450,20 @@ body {
     padding: 15px;
     margin-top: 15px;
   }
-  
+
   .pagination-button {
     padding: 10px 18px;
     font-size: 15px;
     min-height: 44px; /* Touch-friendly */
   }
-  
+
   .pagination-number {
     padding: 10px 14px;
     font-size: 15px;
     min-width: 44px;
     min-height: 44px;
   }
-  
+
   .pagination-info {
     font-size: 15px;
   }
@@ -460,12 +475,12 @@ body {
     text-align: center;
     padding: 15px;
   }
-  
+
   .pagination-controls {
     flex-wrap: wrap;
     justify-content: center;
   }
-  
+
   .pagination-numbers {
     flex-wrap: wrap;
     justify-content: center;
@@ -476,7 +491,7 @@ body {
   .addresses-table {
     font-size: 13px;
   }
-  
+
   /* Optimize column widths for iPad */
   .addresses-table th:nth-child(1), /* Número */
   .addresses-table td:nth-child(1) {
@@ -484,67 +499,67 @@ body {
     max-width: 80px;
     text-align: center;
   }
-  
+
   .addresses-table th:nth-child(2), /* Calle */
   .addresses-table td:nth-child(2) {
     min-width: 140px;
     max-width: 180px;
   }
-  
+
   .addresses-table th:nth-child(3), /* Ciudad */
   .addresses-table td:nth-child(3) {
     min-width: 80px;
     max-width: 100px;
   }
-  
+
   .addresses-table th:nth-child(4), /* Provincia */
   .addresses-table td:nth-child(4) {
     min-width: 70px;
     max-width: 90px;
   }
-  
+
   .addresses-table th:nth-child(5), /* Visitado */
   .addresses-table td:nth-child(5) {
     min-width: 70px;
     max-width: 80px;
   }
-  
+
   .addresses-table th:nth-child(6), /* Fecha de Visita */
   .addresses-table td:nth-child(6) {
     min-width: 120px;
     max-width: 140px;
   }
-  
+
   .addresses-table th:nth-child(7), /* Estado */
   .addresses-table td:nth-child(7) {
     min-width: 110px;
     max-width: 130px;
   }
-  
+
   .addresses-table th:nth-child(8), /* Nivel de Interés */
   .addresses-table td:nth-child(8) {
     min-width: 90px;
     max-width: 110px;
   }
-  
+
   .addresses-table th:nth-child(9), /* Info de Contacto */
   .addresses-table td:nth-child(9) {
     min-width: 100px;
     max-width: 120px;
   }
-  
+
   .addresses-table th:nth-child(10), /* Notas */
   .addresses-table td:nth-child(10) {
     min-width: 150px;
     max-width: 200px;
   }
-  
+
   .addresses-table th:nth-child(11), /* Seguimiento */
   .addresses-table td:nth-child(11) {
     min-width: 120px;
     max-width: 140px;
   }
-  
+
   /* Make inputs more touch-friendly */
   .addresses-table input,
   .addresses-table select,
@@ -553,11 +568,11 @@ body {
     font-size: 14px;
     padding: 6px 8px;
   }
-  
-  .addresses-table input[type="date"] {
+
+  .addresses-table input[type='date'] {
     min-width: 110px;
   }
-  
+
   .addresses-table textarea {
     min-height: 40px;
     min-width: 140px;
@@ -569,21 +584,21 @@ body {
   .container {
     padding: 8px;
   }
-  
+
   .search-form {
     padding: 12px;
   }
-  
+
   .filter-section {
     padding: 15px;
   }
-  
+
   .addresses-table th,
   .addresses-table td {
     padding: 6px 4px;
     font-size: 12px;
   }
-  
+
   .addresses-table input,
   .addresses-table select,
   .addresses-table textarea {
@@ -598,12 +613,12 @@ body {
     max-width: 1300px;
     padding: 20px;
   }
-  
+
   .addresses-table th,
   .addresses-table td {
     padding: 12px 10px;
   }
-  
+
   .addresses-table input,
   .addresses-table select,
   .addresses-table textarea {
@@ -625,7 +640,7 @@ body {
   background: white;
   padding: 40px;
   border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   text-align: center;
   max-width: 400px;
   width: 100%;
@@ -713,18 +728,18 @@ body {
     padding: 50px;
     max-width: 500px;
   }
-  
+
   .password-input,
   .login-button {
     padding: 18px;
     font-size: 18px;
     min-height: 50px;
   }
-  
+
   .login-form h1 {
     font-size: 32px;
   }
-  
+
   .login-form p {
     font-size: 18px;
   }
@@ -734,11 +749,11 @@ body {
   .login-container {
     padding: 15px;
   }
-  
+
   .login-form {
     padding: 30px 20px;
   }
-  
+
   .header-buttons {
     justify-content: center;
   }
@@ -767,11 +782,11 @@ body {
     grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr;
     gap: 15px;
   }
-  
+
   .number-range {
     gap: 6px;
   }
-  
+
   .number-input {
     min-width: 50px;
     font-size: 13px;
@@ -783,7 +798,7 @@ body {
     grid-template-columns: 1fr;
     gap: 15px;
   }
-  
+
   .number-range {
     justify-content: center;
     max-width: 200px;
@@ -795,7 +810,7 @@ body {
   display: flex;
   background: white;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
   overflow: hidden;
 }
@@ -840,7 +855,7 @@ body {
 }
 
 .tab-count {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
   padding: 2px 8px;
   border-radius: 12px;
   font-size: 12px;
@@ -848,14 +863,14 @@ body {
 }
 
 .tab-button.active .tab-count {
-  background: rgba(255,255,255,0.3);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 /* Statistics Styles */
 .statistics-container {
   background: white;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 25px;
 }
 
@@ -1011,7 +1026,7 @@ body {
 }
 
 .overview-card .stat-item {
-  border-bottom-color: rgba(255,255,255,0.2);
+  border-bottom-color: rgba(255, 255, 255, 0.2);
 }
 
 .period-card {
@@ -1026,7 +1041,7 @@ body {
 }
 
 .period-card .stat-item {
-  border-bottom-color: rgba(255,255,255,0.2);
+  border-bottom-color: rgba(255, 255, 255, 0.2);
 }
 
 .conversion-card {
@@ -1042,7 +1057,7 @@ body {
 }
 
 .conversion-card .stat-item {
-  border-bottom-color: rgba(255,255,255,0.2);
+  border-bottom-color: rgba(255, 255, 255, 0.2);
 }
 
 /* iPad optimizations for statistics */
@@ -1050,20 +1065,20 @@ body {
   .statistics-container {
     padding: 20px;
   }
-  
+
   .stats-grid {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 15px;
   }
-  
+
   .stat-card {
     padding: 15px;
   }
-  
+
   .date-inputs {
     gap: 10px;
   }
-  
+
   .tab-button {
     padding: 12px 15px;
     font-size: 15px;
@@ -1074,28 +1089,28 @@ body {
   .statistics-container {
     padding: 15px;
   }
-  
+
   .stats-grid {
     grid-template-columns: 1fr;
     gap: 15px;
   }
-  
+
   .date-inputs {
     flex-direction: column;
     align-items: stretch;
     gap: 10px;
   }
-  
+
   .date-group {
     justify-content: space-between;
   }
-  
+
   .tab-button {
     flex-direction: column;
     gap: 4px;
     padding: 10px;
   }
-  
+
   .tab-label {
     font-size: 12px;
   }
@@ -1246,15 +1261,15 @@ body {
     width: 90vw;
     max-height: 90vh;
   }
-  
+
   .modal-header {
     padding: 15px 20px;
   }
-  
+
   .modal-header h2 {
     font-size: 20px;
   }
-  
+
   .stats-button {
     padding: 10px 18px;
     font-size: 15px;
@@ -1266,26 +1281,26 @@ body {
   .modal-overlay {
     padding: 10px;
   }
-  
+
   .modal-content {
     width: 100%;
     max-height: 90vh;
   }
-  
+
   .modal-header {
     padding: 15px;
   }
-  
+
   .modal-header h2 {
     font-size: 18px;
   }
-  
+
   .modal-close-button {
     width: 35px;
     height: 35px;
     font-size: 20px;
   }
-  
+
   .stats-button {
     padding: 8px 12px;
     font-size: 13px;
@@ -1509,8 +1524,12 @@ body {
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Mobile optimizations */
@@ -1521,19 +1540,19 @@ body {
     left: 10px;
     max-width: none;
   }
-  
+
   .toast {
     padding: 10px 12px;
     font-size: 13px;
   }
-  
+
   .sync-status {
     flex-direction: column;
     align-items: stretch;
     gap: 10px;
     text-align: center;
   }
-  
+
   .sync-info {
     justify-content: center;
   }
@@ -1546,12 +1565,12 @@ body {
     right: 15px;
     max-width: 350px;
   }
-  
+
   .toast {
     padding: 14px 18px;
     font-size: 15px;
   }
-  
+
   .sync-status {
     padding: 12px 18px;
     font-size: 14px;
@@ -1582,4 +1601,173 @@ body {
 .statistics-container .sync-status.syncing {
   background: rgba(52, 152, 219, 0.05);
   border: 1px solid rgba(52, 152, 219, 0.2);
+}
+/* Update Notification Styles */
+.update-notification {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  z-index: 2000;
+  max-width: 500px;
+  margin: 0 auto;
+  animation: slideUp 0.4s ease-out;
+}
+
+.update-content {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  backdrop-filter: blur(10px);
+}
+
+.update-icon {
+  font-size: 24px;
+  animation: pulse 2s infinite;
+}
+
+.update-text {
+  flex: 1;
+}
+
+.update-title {
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.update-message {
+  font-size: 14px;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+.update-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.update-button {
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  min-width: 100px;
+}
+
+.update-button.primary {
+  background: white;
+  color: #667eea;
+}
+
+.update-button.primary:hover:not(:disabled) {
+  background: #f8f9fa;
+  transform: translateY(-1px);
+}
+
+.update-button.primary:disabled {
+  background: #e9ecef;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+.update-button.secondary {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.update-button.secondary:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* iPad optimizations for update notification */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .update-notification {
+    bottom: 30px;
+    left: 30px;
+    right: 30px;
+    max-width: 600px;
+  }
+
+  .update-content {
+    padding: 25px;
+  }
+
+  .update-icon {
+    font-size: 28px;
+  }
+
+  .update-title {
+    font-size: 18px;
+  }
+
+  .update-message {
+    font-size: 15px;
+  }
+
+  .update-button {
+    padding: 12px 20px;
+    font-size: 15px;
+    min-height: 44px;
+  }
+
+  .update-actions {
+    flex-direction: row;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 767px) {
+  .update-notification {
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
+  }
+
+  .update-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+
+  .update-actions {
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .update-button {
+    flex: 1;
+  }
 }

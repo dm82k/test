@@ -11,6 +11,7 @@ import { authService } from './services/authService';
 import { offlineService } from './services/offlineService';
 import { useToast } from './hooks/useToast';
 import { ToastContainer } from './components/Toast';
+import UpdateNotification from './components/UpdateNotification';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -301,6 +302,9 @@ function App() {
 
       {/* Toast Notifications */}
       <ToastContainer toasts={toasts} removeToast={removeToast} />
+
+      {/* Update Notification */}
+      <UpdateNotification />
     </div>
   );
 }
