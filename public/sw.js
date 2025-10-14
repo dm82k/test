@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sales-tracker-v3'; // Increment version for updates
+const CACHE_NAME = 'sales-tracker-v4'; // Increment version for updates
 const urlsToCache = [
   '/',
   '/static/js/bundle.js',
