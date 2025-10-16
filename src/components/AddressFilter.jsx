@@ -8,6 +8,7 @@ const AddressFilter = ({ addresses, onFilter }) => {
     status: 'all',
     visited: 'all',
     interestLevel: 'all',
+    showStoredOnly: false,
   });
 
   // Apply filters whenever filter state changes
@@ -30,6 +31,7 @@ const AddressFilter = ({ addresses, onFilter }) => {
       status: 'all',
       visited: 'all',
       interestLevel: 'all',
+      showStoredOnly: false,
     });
   };
 
@@ -47,7 +49,8 @@ const AddressFilter = ({ addresses, onFilter }) => {
     filters.numberTo ||
     filters.status !== 'all' ||
     filters.visited !== 'all' ||
-    filters.interestLevel !== 'all';
+    filters.interestLevel !== 'all' ||
+    filters.showStoredOnly;
 
   return (
     <div className="filter-section">
@@ -139,6 +142,25 @@ const AddressFilter = ({ addresses, onFilter }) => {
             <option value="Bajo">Bajo</option>
             <option value="Ninguno">Ninguno</option>
           </select>
+        </div>
+
+        <div className="filter-group">
+          <label>Datos Guardados</label>
+          <div className="checkbox-group">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={filters.showStoredOnly}
+                onChange={(e) =>
+                  handleFilterChange('showStoredOnly', e.target.checked)
+                }
+                className="filter-checkbox"
+              />
+              <span className="checkbox-text">
+                Solo mostrar datos guardados
+              </span>
+            </label>
+          </div>
         </div>
       </div>
     </div>

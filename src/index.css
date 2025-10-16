@@ -2158,3 +2158,49 @@ body {
     flex-direction: column;
   }
 }
+/* Checkbox Filter Styling */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: #555;
+}
+
+.filter-checkbox {
+  margin-right: 8px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.checkbox-text {
+  user-select: none;
+}
+
+.checkbox-label:hover .checkbox-text {
+  color: #3498db;
+}
+
+/* Filter grid adjustments for new checkbox */
+@media (min-width: 768px) {
+  .filter-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .checkbox-group {
+    margin-top: 10px;
+  }
+}

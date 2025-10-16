@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sales-tracker-v17'; // Increment version for updates
+const CACHE_NAME = 'sales-tracker-v21'; // Increment version for updates
 const urlsToCache = [
   '/',
   '/manifest.json',

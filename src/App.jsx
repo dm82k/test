@@ -258,6 +258,23 @@ function App() {
       );
     }
 
+    // Stored data only filter
+    if (filters.showStoredOnly) {
+      filtered = filtered.filter((addr) => {
+        // An address is considered "stored" if it has any of these properties:
+        return (
+          addr.id || // Has database ID
+          addr.visited === 'Sí' || // Has been visited
+          addr.status !== 'Sin Contactar' || // Status has been changed
+          addr.interest_level || // Has interest level set
+          (addr.notes && addr.notes.trim()) || // Has notes
+          (addr.contact_info && addr.contact_info.trim()) || // Has contact info
+          addr.visit_date || // Has visit date
+          addr.follow_up_date // Has follow-up date
+        );
+      });
+    }
+
     setFilteredAddresses(filtered);
     setCurrentPage(1); // Reset to first page when filtering
   };

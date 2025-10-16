@@ -103,7 +103,8 @@ export const addressService = {
 
       // Apply filters
       if (city) {
-        query = query.ilike('city', city); // Case-insensitive matching
+        // Use JavaScript filtering for better case-insensitive matching
+        // We'll filter after getting the data
       }
       if (status && status !== 'all') {
         query = query.eq('status', status);
@@ -145,16 +146,43 @@ export const addressService = {
   async getAddressesByCity(city) {
     try {
       // RLS will automatically filter to current user's addresses only
-      // Use case-insensitive matching for city names
+      // Get all addresses and filter in JavaScript for better case-insensitive matching
       const { data, error } = await supabase
         .from('addresses')
         .select('*')
-        .ilike('city', city) // Case-insensitive LIKE
         .order('street', { ascending: true })
         .order('house_number', { ascending: true });
 
       if (error) throw error;
-      return data || [];
+
+      // Debug: Log all cities in database
+      const uniqueCities = [...new Set((data || []).map((addr) => addr.city))];
+      console.log(`All cities in database:`, uniqueCities);
+      console.log(`Looking for city: "${city}"`);
+
+      // Filter by city case-insensitively in JavaScript
+      const filteredData = (data || []).filter(
+        (addr) => addr.city && addr.city.toLowerCase() === city.toLowerCase()
+      );
+
+      console.log(
+        `Found ${filteredData.length} addresses for city "${city}" (case-insensitive)`
+      );
+
+      // Debug: Show what we found
+      if (filteredData.length > 0) {
+        console.log(
+          `Sample addresses:`,
+          filteredData.slice(0, 3).map((addr) => ({
+            city: addr.city,
+            street: addr.street,
+            house_number: addr.house_number,
+            visited: addr.visited,
+          }))
+        );
+      }
+
+      return filteredData;
     } catch (error) {
       console.error('Error fetching addresses by city:', error);
       throw error;
