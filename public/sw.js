@@ -1,10 +1,7 @@
-const CACHE_NAME = 'sales-tracker-v8'; // Increment version for updates
+const CACHE_NAME = 'sales-tracker-v17'; // Increment version for updates
 const urlsToCache = [
   '/',
   '/manifest.json',
-  '/src/main.jsx',
-  '/src/App.jsx',
-  '/src/index.css',
   '/web/favicon.ico',
   '/web/icon-192.png',
   '/web/icon-192-maskable.png',

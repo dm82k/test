@@ -1,4 +1,5 @@
 import { addressService } from './supabaseClient';
+import { stringUtils } from '../utils/stringUtils';
 
 // Enhanced storage service that uses Supabase database
 export const databaseService = {
@@ -50,23 +51,33 @@ export const databaseService = {
   // Load addresses from database and merge with generated ones
   async loadAndMergeAddresses(generatedAddresses, city) {
     try {
-      // Get saved addresses from database for this city
+      // Get saved addresses from database for this city (case-insensitive)
       const savedAddresses = await addressService.getAddressesByCity(city);
 
       if (savedAddresses.length === 0) {
         return generatedAddresses;
       }
 
-      // Create a map of saved addresses by address key
+      // Create a map of saved addresses by normalized address key
       const savedMap = new Map();
       savedAddresses.forEach((addr) => {
-        const key = `${addr.house_number}-${addr.street}`;
+        // Use normalized key for better matching
+        const key = stringUtils.createAddressKey(
+          addr.house_number,
+          addr.street,
+          addr.city
+        );
         savedMap.set(key, addr);
       });
 
       // Merge saved data with generated addresses
       const mergedAddresses = generatedAddresses.map((addr) => {
-        const key = `${addr.house_number}-${addr.street}`;
+        // Use normalized key for matching
+        const key = stringUtils.createAddressKey(
+          addr.house_number,
+          addr.street,
+          addr.city
+        );
         const savedAddr = savedMap.get(key);
 
         if (savedAddr) {
@@ -87,7 +98,7 @@ export const databaseService = {
       });
 
       console.log(
-        `Merged ${savedAddresses.length} saved addresses with ${generatedAddresses.length} generated addresses`
+        `Merged ${savedAddresses.length} saved addresses with ${generatedAddresses.length} generated addresses (normalized matching)`
       );
       return mergedAddresses;
     } catch (error) {

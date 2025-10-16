@@ -1,7 +1,16 @@
 import { databaseService } from './databaseService';
+import { supabase } from './supabaseClient';
+
+// Helper function to get user-specific keys
+const getUserSpecificKey = (baseKey) => {
+  const session = supabase.auth.getSession();
+  const userId = session?.data?.session?.user?.id;
+  return userId ? `${baseKey}_${userId}` : baseKey;
+};
 
 const OFFLINE_QUEUE_KEY = 'offlineQueue';
 const LAST_SYNC_KEY = 'lastSync';
+const ADDRESS_DATA_KEY = 'addressCollectorData';
 
 export const offlineService = {
   // Check if we're online
@@ -24,9 +33,10 @@ export const offlineService = {
           addr.status !== 'Sin Contactar'
       );
 
-      // Save to localStorage
+      // Save to user-specific localStorage
+      const userDataKey = getUserSpecificKey(ADDRESS_DATA_KEY);
       localStorage.setItem(
-        'addressCollectorData',
+        userDataKey,
         JSON.stringify({
           addresses: modifiedAddresses,
           lastUpdated: new Date().toISOString(),
@@ -85,7 +95,8 @@ export const offlineService = {
         id: Date.now(), // Simple ID for deduplication
       });
 
-      localStorage.setItem(OFFLINE_QUEUE_KEY, JSON.stringify(queue));
+      const userQueueKey = getUserSpecificKey(OFFLINE_QUEUE_KEY);
+      localStorage.setItem(userQueueKey, JSON.stringify(queue));
       console.log(`Added ${addresses.length} addresses to offline queue`);
     } catch (error) {
       console.error('Failed to add to offline queue:', error);
@@ -95,7 +106,8 @@ export const offlineService = {
   // Get offline queue
   getOfflineQueue() {
     try {
-      const queue = localStorage.getItem(OFFLINE_QUEUE_KEY);
+      const userQueueKey = getUserSpecificKey(OFFLINE_QUEUE_KEY);
+      const queue = localStorage.getItem(userQueueKey);
       return queue ? JSON.parse(queue) : [];
     } catch (error) {
       console.error('Failed to get offline queue:', error);
@@ -144,7 +156,8 @@ export const offlineService = {
       await databaseService.saveAddresses(addressesToSync);
 
       // Clear offline queue
-      localStorage.removeItem(OFFLINE_QUEUE_KEY);
+      const userQueueKey = getUserSpecificKey(OFFLINE_QUEUE_KEY);
+      localStorage.removeItem(userQueueKey);
       this.updateLastSync();
 
       console.log(`Successfully synced ${addressesToSync.length} addresses`);
@@ -160,12 +173,14 @@ export const offlineService = {
 
   // Update last sync timestamp
   updateLastSync() {
-    localStorage.setItem(LAST_SYNC_KEY, new Date().toISOString());
+    const userSyncKey = getUserSpecificKey(LAST_SYNC_KEY);
+    localStorage.setItem(userSyncKey, new Date().toISOString());
   },
 
   // Get last sync time
   getLastSync() {
-    const lastSync = localStorage.getItem(LAST_SYNC_KEY);
+    const userSyncKey = getUserSpecificKey(LAST_SYNC_KEY);
+    const lastSync = localStorage.getItem(userSyncKey);
     return lastSync ? new Date(lastSync) : null;
   },
 
@@ -203,5 +218,35 @@ export const offlineService = {
       console.log('Connection lost');
       onOffline && onOffline();
     });
+  },
+
+  // Clean up user-specific data (call on logout)
+  clearUserData() {
+    try {
+      const session = supabase.auth.getSession();
+      const userId = session?.data?.session?.user?.id;
+
+      if (userId) {
+        // Remove user-specific data
+        localStorage.removeItem(getUserSpecificKey(OFFLINE_QUEUE_KEY));
+        localStorage.removeItem(getUserSpecificKey(LAST_SYNC_KEY));
+        localStorage.removeItem(getUserSpecificKey(ADDRESS_DATA_KEY));
+        console.log('Cleared user-specific offline data');
+      }
+    } catch (error) {
+      console.error('Failed to clear user data:', error);
+    }
+  },
+
+  // Get user-specific stored addresses
+  getUserStoredAddresses() {
+    try {
+      const userDataKey = getUserSpecificKey(ADDRESS_DATA_KEY);
+      const data = localStorage.getItem(userDataKey);
+      return data ? JSON.parse(data) : null;
+    } catch (error) {
+      console.error('Failed to get user stored addresses:', error);
+      return null;
+    }
   },
 };

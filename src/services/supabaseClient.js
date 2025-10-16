@@ -11,18 +11,55 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+// Helper function to get current user ID
+const getCurrentUserId = async () => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    throw new Error('User not authenticated');
+  }
+  return user.id;
+};
+
 // Database service functions
 export const addressService = {
   // Save multiple addresses (bulk insert with conflict handling)
   async saveAddresses(addresses) {
     try {
-      const { data, error } = await supabase
-        .from('addresses')
-        .upsert(addresses, {
-          onConflict: 'house_number,street,city',
-          ignoreDuplicates: false,
-        })
-        .select();
+      const userId = await getCurrentUserId();
+
+      // Add user_id to all addresses
+      const addressesWithUserId = addresses.map((addr) => ({
+        ...addr,
+        user_id: userId,
+      }));
+
+      // Try upsert with conflict resolution, fallback to insert if constraint doesn't exist
+      let data, error;
+
+      try {
+        const result = await supabase
+          .from('addresses')
+          .upsert(addressesWithUserId, {
+            onConflict: 'house_number,street,city,user_id',
+            ignoreDuplicates: false,
+          })
+          .select();
+
+        data = result.data;
+        error = result.error;
+      } catch (conflictError) {
+        console.log('Conflict constraint not found, using insert instead');
+        // Fallback to regular insert if unique constraint doesn't exist
+        const result = await supabase
+          .from('addresses')
+          .insert(addressesWithUserId)
+          .select();
+
+        data = result.data;
+        error = result.error;
+      }
 
       if (error) throw error;
       return data;
@@ -35,6 +72,7 @@ export const addressService = {
   // Update a single address
   async updateAddress(id, updates) {
     try {
+      // RLS will automatically ensure user can only update their own addresses
       const { data, error } = await supabase
         .from('addresses')
         .update(updates)
@@ -60,11 +98,12 @@ export const addressService = {
     search = null,
   } = {}) {
     try {
+      // RLS will automatically filter to current user's addresses only
       let query = supabase.from('addresses').select('*', { count: 'exact' });
 
       // Apply filters
       if (city) {
-        query = query.eq('city', city);
+        query = query.ilike('city', city); // Case-insensitive matching
       }
       if (status && status !== 'all') {
         query = query.eq('status', status);
@@ -105,10 +144,12 @@ export const addressService = {
   // Get addresses by city (for initial load)
   async getAddressesByCity(city) {
     try {
+      // RLS will automatically filter to current user's addresses only
+      // Use case-insensitive matching for city names
       const { data, error } = await supabase
         .from('addresses')
         .select('*')
-        .eq('city', city)
+        .ilike('city', city) // Case-insensitive LIKE
         .order('street', { ascending: true })
         .order('house_number', { ascending: true });
 
@@ -120,13 +161,14 @@ export const addressService = {
     }
   },
 
-  // Delete all addresses (for testing)
+  // Delete all user's addresses (for testing)
   async clearAllAddresses() {
     try {
+      // RLS will automatically ensure only user's addresses are deleted
       const { error } = await supabase
         .from('addresses')
         .delete()
-        .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all
+        .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all user's addresses
 
       if (error) throw error;
       return true;
@@ -136,9 +178,10 @@ export const addressService = {
     }
   },
 
-  // Get statistics
+  // Get statistics (user-specific due to RLS)
   async getStats() {
     try {
+      // RLS will automatically filter to current user's addresses only
       const { data, error } = await supabase
         .from('addresses')
         .select('status, visited');
@@ -159,4 +202,7 @@ export const addressService = {
       throw error;
     }
   },
+
+  // Get current user ID (utility function)
+  getCurrentUserId,
 };

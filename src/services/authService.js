@@ -1,41 +1,140 @@
-// Simple authentication service
+import { supabase } from './supabaseClient';
+
+// Supabase authentication service
 export const authService = {
-  // Check if user is logged in
+  // Get current user
+  getCurrentUser() {
+    return supabase.auth.getUser();
+  },
+
+  // Get current session
+  getSession() {
+    return supabase.auth.getSession();
+  },
+
+  // Sign up new user
+  async signUp(email, password, userData = {}) {
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: userData.fullName || '',
+            ...userData,
+          },
+        },
+      });
+
+      if (error) throw error;
+      return { success: true, user: data.user, session: data.session };
+    } catch (error) {
+      console.error('Sign up error:', error);
+      return { success: false, error: error.message };
+    }
+  },
+
+  // Sign in user
+  async signIn(email, password) {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+      return { success: true, user: data.user, session: data.session };
+    } catch (error) {
+      console.error('Sign in error:', error);
+      return { success: false, error: error.message };
+    }
+  },
+
+  // Sign out user
+  async signOut() {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      return { success: true };
+    } catch (error) {
+      console.error('Sign out error:', error);
+      return { success: false, error: error.message };
+    }
+  },
+
+  // Reset password
+  async resetPassword(email) {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) throw error;
+      return { success: true };
+    } catch (error) {
+      console.error('Reset password error:', error);
+      return { success: false, error: error.message };
+    }
+  },
+
+  // Update user profile
+  async updateProfile(updates) {
+    try {
+      const { data, error } = await supabase.auth.updateUser({
+        data: updates,
+      });
+
+      if (error) throw error;
+      return { success: true, user: data.user };
+    } catch (error) {
+      console.error('Update profile error:', error);
+      return { success: false, error: error.message };
+    }
+  },
+
+  // Check if user is authenticated (synchronous)
   isAuthenticated() {
-    return localStorage.getItem('isLoggedIn') === 'true';
+    const session = supabase.auth.getSession();
+    return session?.data?.session?.user != null;
   },
 
-  // Log in user
-  login() {
-    localStorage.setItem('isLoggedIn', 'true');
-    localStorage.setItem('loginTime', new Date().toISOString());
-  },
-
-  // Log out user
-  logout() {
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('loginTime');
-  },
-
-  // Check if login has expired (optional - 24 hour sessions)
-  isSessionValid() {
-    const loginTime = localStorage.getItem('loginTime');
-    if (!loginTime) return false;
-
-    const loginDate = new Date(loginTime);
-    const now = new Date();
-    const hoursDiff = (now - loginDate) / (1000 * 60 * 60);
-
-    // Session expires after 24 hours
-    return hoursDiff < 24;
-  },
-
-  // Auto-logout if session expired
-  checkSession() {
-    if (this.isAuthenticated() && !this.isSessionValid()) {
-      this.logout();
+  // Check session validity (async)
+  async checkSession() {
+    try {
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
+      if (error) throw error;
+      return session?.user != null;
+    } catch (error) {
+      console.error('Session check error:', error);
       return false;
     }
-    return this.isAuthenticated();
+  },
+
+  // Listen to auth state changes
+  onAuthStateChange(callback) {
+    return supabase.auth.onAuthStateChange((event, session) => {
+      callback(event, session);
+    });
+  },
+
+  // Get user ID
+  getUserId() {
+    const session = supabase.auth.getSession();
+    return session?.data?.session?.user?.id || null;
+  },
+
+  // Get user email
+  getUserEmail() {
+    const session = supabase.auth.getSession();
+    return session?.data?.session?.user?.email || null;
+  },
+
+  // Get user metadata
+  getUserMetadata() {
+    const session = supabase.auth.getSession();
+    return session?.data?.session?.user?.user_metadata || {};
   },
 };

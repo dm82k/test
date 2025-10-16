@@ -13,9 +13,15 @@ import { useToast } from './hooks/useToast';
 import { ToastContainer } from './components/Toast';
 import UpdateNotification from './components/UpdateNotification';
 import InstallButton from './components/InstallButton';
+import UserProfile from './components/UserProfile';
+import MigrationPrompt from './components/MigrationPrompt';
+import DebugInfo from './components/DebugInfo';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [showMigration, setShowMigration] = useState(false);
   const [showStatistics, setShowStatistics] = useState(false);
   const [addresses, setAddresses] = useState([]);
   const [filteredAddresses, setFilteredAddresses] = useState([]);
@@ -37,7 +43,52 @@ function App() {
 
   // Check authentication on app load
   useEffect(() => {
-    setIsAuthenticated(authService.checkSession());
+    const checkAuth = async () => {
+      try {
+        const {
+          data: { session },
+        } = await authService.getSession();
+        if (session?.user) {
+          setIsAuthenticated(true);
+          setCurrentUser(session.user);
+          // Migration will be handled by auth state change listener
+        }
+      } catch (error) {
+        console.error('Auth check error:', error);
+      } finally {
+        setAuthLoading(false);
+      }
+    };
+
+    checkAuth();
+
+    // Listen for auth state changes
+    const {
+      data: { subscription },
+    } = authService.onAuthStateChange((event, session) => {
+      console.log('Auth state changed:', event, session?.user?.email);
+
+      if (session?.user) {
+        setIsAuthenticated(true);
+        setCurrentUser(session.user);
+        // Show migration for both initial session and new sign-ins
+        if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+          setShowMigration(true);
+        }
+      } else {
+        setIsAuthenticated(false);
+        setCurrentUser(null);
+        setShowMigration(false);
+        // Clear any user-specific data
+        setAddresses([]);
+        setFilteredAddresses([]);
+      }
+      setAuthLoading(false);
+    });
+
+    return () => {
+      subscription?.unsubscribe();
+    };
   }, []);
 
   // Set up offline/online listeners
@@ -225,17 +276,45 @@ function App() {
       ?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleLogin = () => {
-    authService.login();
-    setIsAuthenticated(true);
+  const handleLogin = (user) => {
+    // Auth state change will handle setting authenticated state and migration
+    showSuccess(
+      `¡Bienvenido, ${user.user_metadata?.fullName || user.email}!`,
+      3000
+    );
   };
 
-  const handleLogout = () => {
-    authService.logout();
-    setIsAuthenticated(false);
-    setAddresses([]);
-    setFilteredAddresses([]);
-    setShowStatistics(false);
+  const handleLogout = async () => {
+    const result = await authService.signOut();
+    if (result.success) {
+      // Clear user-specific offline data
+      offlineService.clearUserData();
+
+      setIsAuthenticated(false);
+      setCurrentUser(null);
+      setAddresses([]);
+      setFilteredAddresses([]);
+      setShowStatistics(false);
+      showSuccess('Sesión cerrada correctamente', 2000);
+    } else {
+      showError('Error al cerrar sesión', 3000);
+    }
+  };
+
+  const handleMigrationComplete = (result) => {
+    setShowMigration(false);
+
+    if (result.success && !result.skipped && !result.noMigrationNeeded) {
+      showSuccess(
+        `Migración completada: ${result.count} direcciones asignadas`,
+        4000
+      );
+    } else if (result.skipped) {
+      showWarning(
+        'Migración omitida - los datos existentes no se mostrarán',
+        3000
+      );
+    }
   };
 
   const handleShowStatistics = () => {
@@ -264,9 +343,23 @@ function App() {
     }
   };
 
+  // Show loading state while checking authentication
+  if (authLoading) {
+    return (
+      <div className="loading-container">
+        <div className="loading">🔐 Verificando autenticación...</div>
+      </div>
+    );
+  }
+
   // Show login form if not authenticated
   if (!isAuthenticated) {
     return <LoginForm onLogin={handleLogin} />;
+  }
+
+  // Show migration prompt if needed
+  if (showMigration) {
+    return <MigrationPrompt onComplete={handleMigrationComplete} />;
   }
 
   return (
@@ -286,9 +379,7 @@ function App() {
               🗑️ Borrar Todos los Datos
             </button>
           )}
-          <button onClick={handleLogout} className="logout-button">
-            🚪 Cerrar Sesión
-          </button>
+          <UserProfile user={currentUser} onLogout={handleLogout} />
         </div>
       </div>
 
@@ -340,6 +431,9 @@ function App() {
 
       {/* Install Button */}
       <InstallButton />
+
+      {/* Debug Info (only in development) */}
+      {import.meta.env.DEV && <DebugInfo />}
     </div>
   );
 }
